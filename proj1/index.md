@@ -18,3 +18,22 @@ Steps 1 and 2 create a bounding box for the input triangle, so we don’t have t
 
 
 ![Triangles from Task 1](/images/Task-1.png)
+
+
+## Task 2: Antialiasing by Supersampling (20 pts)
+
+Q1: Supersampling is an anti-aliasing technique that approximates a 1-pixel box filter. As we increase our sampling rate, we reduce the effects of aliasing like jagged edges and other rendering artifacts. 
+
+We made the following changes to the rasterization process: 
+Resize our sample buffer and frame buffer to `width * height * sample_rate`.
+Now, whenever we access the sample buffer or frame buffer, multiply the index by `sqrt(sample_rate)`.
+In `rasterize_triangle`, translate the coordinates of our triangle’s input vertices into supersampled coordinates by multiplying each value by `sqrt(sample_rate)`. 
+In `resolve_to_framebuffer`, we take NxN samples from each pixel and compute the average RGB values to get our average color. We then fill the corresponding entry in the frame buffer. 
+
+Q2: Side-by-side examples from `basic/test4.svg` are shown below. 
+- The leftmost image has a sampling rate of 1. This image contains the most “jaggies” and no smoothing since a pixel’s color is either present or not present. This decision depends on whether the center point is in the triangle. 
+- The middle image has a sampling rate of 4. This image contains some rugged edges and some smoothing since a pixel’s color varies based on how many of the 4x4=16 samples are inside the triangle. 
+- The rightmost image has a sampling rate of 16. This image contains almost no “jaggies'' and appears to be the most smooth since a pixel’s color varies based on how many of the 16x16=256 samples are inside the triangle. This calculation is much more dense and accurate for each pixel. 
+
+|    1x1    | 4x4 | 16x16     |
+| ![task 2-1](/images/Task-2-1.png)      | ![task 2-4](/images/Task-2-4.png)        | ![task 2-1](/images/Task-2-16.png)    |
