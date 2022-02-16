@@ -68,3 +68,20 @@ Sample a value from the texture at (u, v) using one of two methods: nearest-pixe
 - Nearest-pixel sampling involves simply using the value at the discrete coordinate nearest to (u, v) in texture space. While this approach works, it can lead to aliasing in regions where the texture frequency is too high relative to our sampling rate — we provide an example of this later. 
 
 - To help mitigate this issue, we could instead use bilinear sampling, which samples the four nearest discrete coordinates in texture space, then uses a bilinear interpolation of their color values. Intuitively, this results in smoother color values for our final rendered image. Theoretically, this can be viewed as applying a certain filter to the texture before sampling, which reduces the maximum frequency of the signal and thus reduces aliasing.
+
+| Nearest-pixel sampling (1 sample/pixel)      | Bilinear-sampling (1 sample/pixel) |
+| ----------- | ----------- |
+| ![5-1-1](/images/Task-5-1-1.png)      | ![5-1-1](/images/Task-5-1-2.png)       |
+| Nearest-pixel sampling (16 samples/pixel)      | Bilinear-sampling (16 samples/pixel)       |
+| ----------- | ----------- |
+| ![5-1-1](/images/Task-5-1-3.png)   | ![5-1-4](/images/Task-5-1-1.png)        |
+
+The figure above shows a comparison of `svg/texmap/test5.svg` (the Berkeley seal) rendered using nearest-pixel vs. bilinear-sampling, with 1 sample/pixel and 16 samples/pixel each. We see that bilinear sampling results in a more “blurred” image, with significantly less aliasing than the nearest-pixel sampled image. In fact, while supersampling 16 samples/pixel does help reduce aliasing slightly, switching from nearest-pixel to bilinear sampling produces a much larger improvement (even bilinear sampling with just 1 sample/pixel).
+
+The benefits of bilinear sampling are more evident the higher the frequency of the texture is relative to the sampling rate. Practically, this might happen when the texture is very fine-grained compared to the number of pixels that will be rendered on the screen — in other words, if the texture goes through many changes in color values within the area of a single pixel in screen space. When this is the case, bilinear sampling is especially useful because it incorporates more information from the texture by using a weighted average of nearby texture samples, whereas nearest-pixel sampling is limited to the value at a single (u, v) coordinate and is thus more prone to aliasing.
+
+This means, for example, there would typically be a large improvement when using bilinear sampling to render a very zoomed-out texture, because its frequency would be very high relative to the screen space. On the other hand, if we were rendering a lower-frequency texture (such as the solid color region of the parrot svg, shown below), we could get away with using nearest-pixel sampling without much or any reduction in performance.
+
+| Nearest-pixel sampling (1 sample/pixel)      | Bilinear-sampling (1 sample/pixel) |
+| ----------- | ----------- |
+| ![5-1-1](/images/Task-5-2-2.png)      | ![5-1-1](/images/Task-5-2-1.png)       |
