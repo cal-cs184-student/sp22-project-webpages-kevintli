@@ -92,6 +92,28 @@ This means, for example, there would typically be a large improvement when using
 
 ## Task 6: "Level sampling" with mipmaps for texture mapping (25 pts)
 
+Another antialiasing technique we can use for texture mapping is **level sampling**. The motivation for level sampling comes from the fact that aliasing occurs whenever the max signal frequency is greater than half the sampling rate (Nyquist frequency). Ideally, we could avoid such aliasing by sampling each pixel from a signal whose frequency matches the screen sampling rate.
+
+In practice, level sampling approximates this by using a data structure called a **mipmap**, which stores progressively downsampled versions of the texture in powers of two. Then for each (x, y) coordinate, we can simply sample from the mipmap level whose resolution most closely matches the “screen sampling rate” in that region. Lecture 5 provides the exact equations needed to compute the appropriate mipmap level for a given coordinate (shown below) — essentially, the greater the distance traveled in texture space for a given distance in screen space, the higher the mipmap level (lower frequency signal) we should use.
+
+![6-diagram-1](/images/Task-6-Aid.png)
+
+To implement this, we first use barycentric interpolation to find the (u, v) coordinates as well as the changes in texture space per pixel in screen space (`du/dx`, `dv/dx`, `du/dy`, and `dv/dy`). Then, we use the equations from Lecture 5 to compute the appropriate mipmap level as a continuous value. Finally, since the actual mipmap levels are discrete, we must choose one of three techniques for level sampling:
+- **Level zero**: always use level zero of the mipmap (the full-resolution texture).
+- **Nearest level**: choose the nearest valid integer mipmap level to use.
+- **Linear interpolation**: sample once from each of the two nearest mipmap levels, then use a weighted average of their values.
+
+This can be done *in combination with* the other sampling methods too (pixel sampling and supersampling)!
+
+The three sampling techniques each have their own tradeoffs:
+
+|       | Supersampling | Pixel Sampling      | Level Sampling |
+| ----------- | ----------- | ----------- | ----------- |
+| **Runtime**      | **Highest** (when `sample_rate` > 4). Requires `sample_rate` times more sampling operations, followed by a simple averaging operation.       | **Medium**. Requires 4x more sampling operations, followed by 3 lerps.      | **Lowest**. Requires level calculation and just 1-2 sampling operations (depending on whether we use linear interpolation or nearest/zero level sampling).       |
+| **Memory Usage**   | **Higher**. Requires additional sample buffer of size `sample_rate * screen_width * screen_height`. If screen resolution is higher than texture resolution, this will generally be more memory-intensive than level sampling.        | **Lowest**. No additional memory required, since we simply use the existing buffer and texture file.   | **Higher**. Requires mipmaps: let T be the `texture_width * texture_height`. Then, this requires additional buffers of size `T/4 + T/16 + T/64 + … = O(T)`. If texture resolution is higher than screen resolution, this will generally be more memory-intensive than supersampling.        |
+| **Anti-aliasing Power**   | Generally very strong antialiasing, since it approximates a 1-pixel box filter. However, this is only useful for textures with sufficient frequency. When doing texture magnification, for example, there isn’t enough resolution in the texture to begin with, so using bilinear pixel sampling would make more sense.        | Somewhat effective at antialiasing. Also useful for the texture magnification case, since pixel sampling with bilinear interpolation allows us to produce smoother-looking images.   | Very strong antialiasing, since it chooses the best available texture resolution based on the screen sampling rate for each pixel.        |
+
+
 To show how "Level sampling" operates in combination with "Pixel sampling" from Task 5, we have four versions of Yoho National Park. 
 
 | L_ZERO and P_NEAREST      | L_ZERO and P_LINEAR |
