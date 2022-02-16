@@ -55,3 +55,16 @@ Below is an example of Barycentric coordinates in action to interpolate the spec
 Here is the requested screenshot for `svg/basic/test7.svg` with default viewing parameters and sample rate 1: 
 
 ![task 4](/images/Task-4.png)
+
+## Task 5: "Pixel sampling" for texture mapping (15 pts)
+
+Pixel sampling is the process of sampling from an image signal. In the case of pixel sampling for texture mapping, our goal is to sample color values from a texture file which will be rendered in screen space. For every discrete (x, y) coordinate in screen space, there is a corresponding (u, v) coordinate in the texture from which we can sample.
+
+Our rasterizer handles textures in the form of triangles, similar to the procedure described in Tasks 1 and 2. However, for each (x, y) coordinate, the sampling process is a bit more involved — this is because we are sampling from a texture whose coordinates do not necessarily align with those of the screen itself (the texture may be “warped” relative to screen space, or be a different size than the canvas). To handle this, we use the following steps:
+
+1. Map the coordinate to its corresponding (u, v) location in texture space using barycentric interpolation. Unlike the (x, y) coordinate, the (u, v) coordinate is continuous.
+Sample a value from the texture at (u, v) using one of two methods: nearest-pixel sampling or bilinear sampling.
+
+- Nearest-pixel sampling involves simply using the value at the discrete coordinate nearest to (u, v) in texture space. While this approach works, it can lead to aliasing in regions where the texture frequency is too high relative to our sampling rate — we provide an example of this later. 
+
+- To help mitigate this issue, we could instead use bilinear sampling, which samples the four nearest discrete coordinates in texture space, then uses a bilinear interpolation of their color values. Intuitively, this results in smoother color values for our final rendered image. Theoretically, this can be viewed as applying a certain filter to the texture before sampling, which reduces the maximum frequency of the signal and thus reduces aliasing.
