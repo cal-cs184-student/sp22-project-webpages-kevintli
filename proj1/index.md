@@ -1,5 +1,7 @@
 # Project 1: Rasterizer 
 
+**Contributors**: Micah Yong (micahtyong@berkeley.edu) and Kevin Li (kevintli@berkeley.edu)
+
 ## Task 1: Drawing Single-Color Triangles (20 pts)
 
 Our strategy is reminiscent of [rejection sampling](https://en.wikipedia.org/wiki/Rejection_sampling). To rasterize a triangle, 
@@ -63,15 +65,17 @@ Pixel sampling is the process of sampling from an image signal. In the case of p
 Our rasterizer handles textures in the form of triangles, similar to the procedure described in Tasks 1 and 2. However, for each (x, y) coordinate, the sampling process is a bit more involved — this is because we are sampling from a texture whose coordinates do not necessarily align with those of the screen itself (the texture may be “warped” relative to screen space, or be a different size than the canvas). To handle this, we use the following steps:
 
 1. Map the coordinate to its corresponding (u, v) location in texture space using barycentric interpolation. Unlike the (x, y) coordinate, the (u, v) coordinate is continuous.
-Sample a value from the texture at (u, v) using one of two methods: nearest-pixel sampling or bilinear sampling.
 
-- Nearest-pixel sampling involves simply using the value at the discrete coordinate nearest to (u, v) in texture space. While this approach works, it can lead to aliasing in regions where the texture frequency is too high relative to our sampling rate — we provide an example of this later. 
+2. Sample a value from the texture at (u, v) using one of two methods: nearest-pixel sampling or bilinear sampling.
 
-- To help mitigate this issue, we could instead use bilinear sampling, which samples the four nearest discrete coordinates in texture space, then uses a bilinear interpolation of their color values. Intuitively, this results in smoother color values for our final rendered image. Theoretically, this can be viewed as applying a certain filter to the texture before sampling, which reduces the maximum frequency of the signal and thus reduces aliasing.
+Nearest-pixel sampling involves simply using the value at the discrete coordinate nearest to (u, v) in texture space. While this approach works, it can lead to aliasing in regions where the texture frequency is too high relative to our sampling rate — we provide an example of this later. 
+
+To help mitigate this issue, we could instead use bilinear sampling, which samples the four nearest discrete coordinates in texture space, then uses a bilinear interpolation of their color values. Intuitively, this results in smoother color values for our final rendered image. Theoretically, this can be viewed as applying a certain filter to the texture before sampling, which reduces the maximum frequency of the signal and thus reduces aliasing.
 
 | Nearest-pixel sampling (1 sample/pixel)      | Bilinear-sampling (1 sample/pixel) |
 | ----------- | ----------- |
 | ![5-1-1](/images/Task-5-1-1.png)      | ![5-1-1](/images/Task-5-1-2.png)       |
+
 | Nearest-pixel sampling (16 samples/pixel)      | Bilinear-sampling (16 samples/pixel)       |
 | ----------- | ----------- |
 | ![5-1-1](/images/Task-5-1-3.png)   | ![5-1-4](/images/Task-5-1-1.png)        |
@@ -85,3 +89,15 @@ This means, for example, there would typically be a large improvement when using
 | Nearest-pixel sampling (1 sample/pixel)      | Bilinear-sampling (1 sample/pixel) |
 | ----------- | ----------- |
 | ![5-1-1](/images/Task-5-2-2.png)      | ![5-1-1](/images/Task-5-2-1.png)       |
+
+## Task 6: "Level sampling" with mipmaps for texture mapping (25 pts)
+
+To show how "Level sampling" operates in combination with "Pixel sampling" from Task 5, we have four versions of Yoho National Park. 
+
+| L_ZERO and P_NEAREST      | L_ZERO and P_LINEAR |
+| ----------- | ----------- |
+| ![6-1-1](/images/Task-6-Lzero-Pnearest.png)      | ![6-1-1](/images/Task-6-Lzero-Plinear.png)       |
+
+| L_NEAREST and P_NEAREST      | L_NEAREST and P_LINEAR       |
+| ----------- | ----------- |
+| ![6-1-1](/images/Task-6-Lnearest-Pnearest.png)   | ![6-1-1](/images/Task-6-Lnearest-Plinear.png)        |
