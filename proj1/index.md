@@ -24,18 +24,20 @@ Steps 1 and 2 create a bounding box for the input triangle, so we don’t have t
 
 ## Task 2: Antialiasing by Supersampling (20 pts)
 
-Q1: Supersampling is an anti-aliasing technique that approximates a 1-pixel box filter. As we increase our sampling rate, we reduce the effects of aliasing like jagged edges and other rendering artifacts. 
+Q1: Supersampling is an anti-aliasing technique that approximates a 1-pixel box filter. It does this by sampling `sample_rate` points within each pixel in screen space, and averaging together their color values. As we increase our sampling rate, we reduce the effects of aliasing like jagged edges and other rendering artifacts. 
 
 We made the following changes to the rasterization process: 
-Resize our sample buffer and frame buffer to `width * height * sample_rate`.
-Now, whenever we access the sample buffer or frame buffer, multiply the index by `sqrt(sample_rate)`.
-In `rasterize_triangle`, translate the coordinates of our triangle’s input vertices into supersampled coordinates by multiplying each value by `sqrt(sample_rate)`. 
-In `resolve_to_framebuffer`, we take NxN samples from each pixel and compute the average RGB values to get our average color. We then fill the corresponding entry in the frame buffer. 
+- Resize our sample buffer and frame buffer to width * height * sample_rate.
+- Now, whenever we access the sample buffer or frame buffer, multiply the index by `sqrt(sample_rate)`.
+- In `rasterize_triangle`, translate the coordinates of our triangle’s input vertices into supersampled coordinates by multiplying each value by `sqrt(sample_rate)`. 
+- In `resolve_to_framebuffer`, we take sample_rate samples from the sample buffer for each corresponding pixel in the frame buffer, and compute the average RGB values to get our average color. We then fill the corresponding entry in the frame buffer. 
+
 
 Q2: Side-by-side examples from `basic/test4.svg` are shown below. 
 - The leftmost image has a sampling rate of 1. This image contains the most “jaggies” and no smoothing since a pixel’s color is either present or not present. This decision depends on whether the center point is in the triangle. 
 - The middle image has a sampling rate of 4. This image contains some rugged edges and some smoothing since a pixel’s color varies based on how many of the 4x4=16 samples are inside the triangle. 
 - The rightmost image has a sampling rate of 16. This image contains almost no “jaggies'' and appears to be the most smooth since a pixel’s color varies based on how many of the 16x16=256 samples are inside the triangle. This calculation is much more dense and accurate for each pixel. 
+
 
 |    1x1    | 4x4 | 16x16     |
 | ![task 2-1](/images/Task-2-1.png)      | ![task 2-4](/images/Task-2-4.png)        | ![task 2-1](/images/Task-2-16.png)    |
@@ -48,9 +50,12 @@ Cubeman is born to life! Instead of being a boring red statue, Cubeman has becom
 
 ## Task 4: Barycentric Coordinates (10 pts)
 
-The 2D Barycentric coordinate system is a system in which the location of a point is specified by the proportional distances between the vertices of a triangle. For texture mapping, we want to derive texture coordinates on a 2D plane, so we use our rasterized triangle coordinates and Barycentric coordinates to interpolate textures across the triangle. 
+The 2D Barycentric coordinate system is a system in which the location of a point is specified by the proportional distances between the vertices of a triangle. If the vertices of the triangle are $$P_1, P_2, P_3$$, then we can represent any point $$P$$ within the triangle using barycentric coordinates $$(\alpha, \beta, \gamma)$$, where $$P = \alpha P_1 + \beta P_2 + \gamma P_3$$. The barycentric coordinate values are restricted such that $$\alpha, \beta, \gamma \geq 0$$ and $$\alpha + \beta + \gamma = 1$$.
 
-Below is an example of Barycentric coordinates in action to interpolate the spectrum of RGB values in a triangle. Here, the triangle’s vertices represent the primary colors, red (upper left), green (upper right), and blue (bottom right). Each point within the triangle is weighted by their distance from the triangle’s vertices. These weights (i.e., `alpha`, `beta`, `gamma`) directly correspond to their RGB value in the color spectrum. 
+For texture mapping, we want to derive texture coordinates on a 2D plane. Given our triangle vertex coordinates in screen space and their corresponding coordinates in texture space, we can convert any screen space coordinates within the triangle to barycentric coordinates, then interpolate and get the desired coordinates in texture space.
+
+Below is an example of Barycentric coordinates in action to interpolate the spectrum of RGB values in a triangle. Here, the triangle’s vertices represent the primary colors, red (upper left), green (upper right), and blue (bottom right). Each point within the triangle is weighted by their distance from the triangle’s vertices. These weights (i.e., alpha, beta, gamma) directly correspond to their RGB value in the color spectrum. 
+
 
 ![task 4](/images/Task-4-2.png)
 
