@@ -118,8 +118,8 @@ To show how "Level sampling" operates in combination with "Pixel sampling" from 
 
 | L_ZERO and P_NEAREST      | L_ZERO and P_LINEAR |
 | ----------- | ----------- |
-| ![6-1-1](/images/Task-6-Lzero-Pnearest.png)      | ![6-1-1](/images/Task-6-Lzero-Plinear.png)       |
+| ![6-1-1](/images/Task-6-Lzero-Pnearest.png)      | ![6-1-1](/images/Task-6-Lzero-Pbilinear.png)       |
 
 | L_NEAREST and P_NEAREST      | L_NEAREST and P_LINEAR       |
 | ----------- | ----------- |
-| ![6-1-1](/images/Task-6-Lnearest-Pnearest.png)   | ![6-1-1](/images/Task-6-Lnearest-Plinear.png)        |
+| ![6-1-1](/images/Task-6-Lnearest-Pnearest.png)   | ![6-1-1](/images/Task-6-Lnearest-Pbilinear.png)        |
