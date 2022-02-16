@@ -50,7 +50,7 @@ Cubeman is born to life! Instead of being a boring red statue, Cubeman has becom
 
 ## Task 4: Barycentric Coordinates (10 pts)
 
-The 2D Barycentric coordinate system is a system in which the location of a point is specified by the proportional distances between the vertices of a triangle. If the vertices of the triangle are $P_1, P_2, P_3$, then we can represent any point $P$ within the triangle using barycentric coordinates $(\alpha, \beta, \gamma)$, where $P = \alpha P_1 + \beta P_2 + \gamma P_3$. The barycentric coordinate values are restricted such that $\alpha, \beta, \gamma \geq 0$ and $\alpha + \beta + \gamma = 1$.
+The 2D Barycentric coordinate system is a system in which the location of a point is specified by the proportional distances between the vertices of a triangle. If the vertices of the triangle are `P_1, P_2, P_3`, then we can represent any point `P` within the triangle using barycentric coordinates `(alpha, beta, gamma)`, where `P = alpha P_1 + beta P_2 + gamma P_3`. The barycentric coordinate values are restricted such that `alpha, beta, gamma >= 0` and `alpha + beta + gamma = 1`.
 
 For texture mapping, we want to derive texture coordinates on a 2D plane. Given our triangle vertex coordinates in screen space and their corresponding coordinates in texture space, we can convert any screen space coordinates within the triangle to barycentric coordinates, then interpolate and get the desired coordinates in texture space.
 
