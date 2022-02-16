@@ -92,7 +92,7 @@ To help mitigate this issue, we could instead use **bilinear sampling**, which s
 
 | Nearest-pixel sampling (16 samples/pixel)      | Bilinear-sampling (16 samples/pixel)       |
 | ----------- | ----------- |
-| ![5-1-1](/images/Task-5-1-3.png)   | ![5-1-4](/images/Task-5-1-1.png)        |
+| ![5-1-1](/images/Task-5-1-3.png)   | ![5-1-4](/images/Task-5-1-4.png)        |
 
 The figure above shows a comparison of `svg/texmap/test5.svg` (the Berkeley seal) rendered using nearest-pixel vs. bilinear-sampling, with 1 sample/pixel and 16 samples/pixel each. We see that bilinear sampling results in a more “blurred” image, with significantly less aliasing than the nearest-pixel sampled image. In fact, while supersampling 16 samples/pixel does help reduce aliasing slightly, switching from nearest-pixel to bilinear sampling produces a much larger improvement (even bilinear sampling with just 1 sample/pixel).
 
