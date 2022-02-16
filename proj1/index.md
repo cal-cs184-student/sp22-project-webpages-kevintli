@@ -2,6 +2,15 @@
 
 **Contributors**: Micah Yong (micahtyong@berkeley.edu) and Kevin Li (kevintli@berkeley.edu)
 
+## Overview
+
+In this project, we implemented a functional vector graphics renderer/rasterizer with features like drawing triangles, supersampling, hierarchical transforms, and texture mapping with antialiasing. Here are some interesting takeaways from the project: 
+
+- It was cool to see some of the more abstract concepts from lecture (such as transformations and mipmaps) be applied to actual computer graphics code. Being forced to implement the equations and logic for those concepts in code, and also seeing firsthand how different optimizations affected the final image quality, made everything seem much more real.
+- This project gave me an inside look of .svg files, and how a graphics engine like OpenGL can manipulate shapes represented as code. 
+- It was also interesting to notice certain operations that showed up very frequently in graphics code, such as barycentric interpolation and lerp. (This was mentioned in lecture, but it was hard to appreciate until we had to write and refactor the code ourselves!)
+
+
 ## Task 1: Drawing Single-Color Triangles (20 pts)
 
 Our strategy is reminiscent of [rejection sampling](https://en.wikipedia.org/wiki/Rejection_sampling). To rasterize a triangle, 
