@@ -37,3 +37,21 @@ Q2: Side-by-side examples from `basic/test4.svg` are shown below.
 
 |    1x1    | 4x4 | 16x16     |
 | ![task 2-1](/images/Task-2-1.png)      | ![task 2-4](/images/Task-2-4.png)        | ![task 2-1](/images/Task-2-16.png)    |
+
+## Task 3: Transforms (10 pts)
+
+![task 3](/images/Task-3.png)
+
+Cubeman is born to life! Instead of being a boring red statue, Cubeman has become a Gymbro. In this photo, we’ve rotated his arms and legs and transformed their relative positions to make Gymbro do jumping jacks. We also scaled up the relative widths of his arms and legs to show that Gymbro has strong biceps and sturdy quadriceps. He will be grinding in the RSF later today. 
+
+## Task 4: Barycentric Coordinates (10 pts)
+
+The 2D Barycentric coordinate system is a system in which the location of a point is specified by the proportional distances between the vertices of a triangle. For texture mapping, we want to derive texture coordinates on a 2D plane, so we use our rasterized triangle coordinates and Barycentric coordinates to interpolate textures across the triangle. 
+
+Below is an example of Barycentric coordinates in action to interpolate the spectrum of RGB values in a triangle. Here, the triangle’s vertices represent the primary colors, red (upper left), green (upper right), and blue (bottom right). Each point within the triangle is weighted by their distance from the triangle’s vertices. These weights (i.e., `alpha`, `beta`, `gamma`) directly correspond to their RGB value in the color spectrum. 
+
+![task 4](/images/Task-4-2.png)
+
+Here is the requested screenshot for `svg/basic/test7.svg` with default viewing parameters and sample rate 1: 
+
+![task 4](/images/Task-4.png)
