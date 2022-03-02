@@ -2,6 +2,16 @@
 
 **Contributors**: Micah Yong (micahtyong@berkeley.edu) and Kevin Li (kevintli@berkeley.edu)
 
+<br>
+
+## Link to Writeup
+https://cal-cs184-student.github.io/sp22-project-webpages-kevintli/proj2/index.html
+
+<br>
+
+---
+<br>
+
 ## Overview
 
 In this project, we built Bezier curves and surfaces using de Casteljau algorithm, manipulated triangle meshes represented by half-edge data structure, and implemented loop subdivision. These features are a critical part of representing realistic shapes and textures in graphics applications.
@@ -170,7 +180,9 @@ Then, as we performed loop subdivision, we observed that the corner vertex moved
 
 | Without pre-splitting      | With pre-splitting |
 | ----------- | ----------- |
-| ![t61](images/task6-no-split.gif)   | ![t62](images/task6-with-split.gif)       |
+| ![t61](images/task6-before.png)   | ![t61](images/task6-before.png)
+| ![t62](images/task6-no-split.png)   | ![t63](images/task6-with-splits.png)       |
+| ![t64](images/task6-no-split-2.png)   | ![t65](images/task6-with-splits-2.png)       
 
 **Asymmetry of cube**
 
@@ -178,14 +190,20 @@ During loop subdivision, the new positions of vertices are calculated using a we
 
 For example, in the diagram below, the vertex circled in red does not contribute to the average for the yellow starred vertex, causing its new position to be biased towards the other directions:
 
-![t63](images/task6-asymmetric-vertex-diagram.png)
+![t66](images/task6-asymmetric-vertex-diagram.png)
 
 To fix this, we can pre-process the cube with edge flips/splits to make sure that each vertex’s neighbors are symmetric in position, like in the picture below:
 
-![t64](images/task6-cube-symmetric-initial.png)
+![t67](images/task6-cube-symmetric-initial.png)
 
 Here is a comparison of the cube shape after repeated subdivisions, with vs. without preprocessing. (The last frame of each GIF switches to a side view of the cube to make the differences clearer.)
 
 | Asymmetric loop subdivision (no preprocessing)      | Symmetric loop subdivision (with preprocessing) |
 | ----------- | ----------- |
-| ![t65](images/task6-q3-nopreprocess.gif)   | ![t66](images/task6-cube-symmetric.gif)       |
+| ![t68](images/task6-1.png) | ![t69](images/task6-cube-symmetric-initial.png)       |
+| ![t6a](images/task6-2.png) | ![t6b](images/cube-symmetric-2.png)       |
+| ![t6c](images/task6-3.png) | ![t6d](images/cube-symmetric-3.png)       |
+| ![t6e](images/task6-4.png) | ![t6f](images/cube-symmetric-4.png)       |
+| ![t6g](images/task6-5.png) | ![t6h](images/cube-symmetric-5.png)       |
+| ![t6i](images/task6-6.png) | ![t6j](images/cube-symmetric-6.png)       |
+| ![t6i](images/task6-q3-nopreprocess-res.png) | ![t6j](images/cube-symmetric-side.png)       |
