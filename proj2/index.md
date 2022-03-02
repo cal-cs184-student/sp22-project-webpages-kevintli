@@ -18,17 +18,17 @@ Here are screenshots showing each step / level of the evaluation from the origin
 
 | Level      | Screenshot |
 | ----------- | ----------- |
-| 1   | ![t11](/images/task1-1.png)       |
-| 2   | ![t12](/images/task1-2.png)        |
-| 3   | ![t12](/images/task1-3.png)        |
-| 4   | ![t12](/images/task1-4.png)        |
-| 5   | ![t12](/images/task1-5.png)        |
-| 6   | ![t12](/images/task1-6.png)        |
-| 7   | ![t12](/images/task1-7.png)        |
+| 1   | <img src="images/task1-1.png" alt="t11" width="500"> |
+| 2   | <img src="images/task1-2.png" alt="t12" width="500"> |
+| 3   | <img src="images/task1-3.png" alt="t13" width="500"> |
+| 4   | <img src="images/task1-4.png" alt="t14" width="500"> |
+| 5   | <img src="images/task1-5.png" alt="t15" width="500"> |
+| 6   | <img src="images/task1-6.png" alt="t16" width="500"> |
+| 7   | <img src="images/task1-7.png" alt="t17" width="500"> |
 
 Here is a screenshot screenshot of a slightly different Bezier curve. We achieved this different Bezier curve by moving the center control point down and adjusting the neighboring points. We also increased `t` to be close to `1`. 
 
-![t12](/images/task1-vary.png) 
+![t12](images/task1-vary.png) 
 
 ## Task 2: Bezier Surfaces with separable 1D via de Casteljau
 
@@ -38,7 +38,7 @@ As explained in [Lecture 7]​​(https://cs184.eecs.berkeley.edu/sp19/lecture/7
 
 Here is the requested screenshot of `bez/teapot.bez`, evaluated our implementation. 
 
-![t12](/images/task2-withwireframe.png) 
+![t12](images/task2-withwireframe.png) 
 
 We also provide a screenshot without the wireframes. 
 
