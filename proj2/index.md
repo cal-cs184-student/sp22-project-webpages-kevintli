@@ -100,4 +100,27 @@ And here is the same before/after diagram but with a combination of edge splits 
 | ----------- | ----------- |
 | ![t11](/images/task5-before.png)   | ![t11](/images/task5-after-wflip.png)       |
 
-## Task 6: 
+## Task 6: Loop Subdivision for Mesh Upsampling
+
+To implement loop subdivision, we roughly followed the pseudo code described in both the spec and in the skeleton for `upsample(..)`. 
+1. To start, we compute all updated positions for old vertices, then store those positions in the vertex’s `newPosition` attribute. To compute updated positions, we followed the Loop Subdivision rule discussed in the spec: `(1 - n * u) * original_position + u * original_neighbor_position_sum`.
+	* It’s imperative to use floats during the Loop Subdivision rule, so we added floating points to every expression. For example, instead of setting `u` to `3 / 16`, it was important to use `3.0 / 16` to avoid `u` being incorrectly set to zero. 
+2. Second, we compute the positions for new vertices (i.e., for when we split edges), then store these positions in the edge’s `newPosition` attribute. To compute new positions, we followed the closed formula discussed in the spec: `3/8 * (A + B) + 1/8 * (C + D)`.
+	* Similar to (1), it’s imperative to use floats during our calculations, so we added floating points to every expression. For example, instead of multiplying `(A + B)` by `3 / 8`, it was important to use `3.0 / 8` to avoid `(A + B)` being incorrectly set to zero. 
+3. Next, we perform edge splits over every edge in the original mesh input. Every edge split returns a new vertex. For each returned vertex, we set its new position to the value stored in the edge’s `newPosition` attribute.
+	* To avoid an infinite for loop, we precomputed the number of edges, `N`, in the original mesh (e.g., using `.nEdges()`) before entering the loop. We set a counter, `k`, to track our location in the iterator. Our for loop used two updates like so: `for (EdgeIter e = mesh.edgesBegin(); k < N; k++, e++)`.
+4. Then, we flipped any old edges that connected an old and new vertex, as described in the spec. 
+5. Finally, we copied the new vertex positions (i.e., stored in `v->newPosition`) into the vertex’s actual position (i.e., `v->position`). 
+
+
+We loaded `dae/cube.dae`, then paid attention to how sharp corners and edges changed as we performed loop subdivision. 
+
+For sharp corners, we noticed that certain corners would move closer to the center of the cube at each iteration. This movement was most drastic after the first iteration of loop subdivision, then gradually moved less at each iteration after that. For edges, one call to upsample would subdivide each edge into more edges at each iteration. For example, after the first iteration, a given edge would split to become two edges. After the second iteration, those two edges split into four edges. After the third iteration, those four edges would split into eight edges (i.e., we observed a branching factor of 2). Combined with the original observation with sharp corners, the original edges appeared to “curve” into a more spherical shape. 
+
+To reduce this effect for sharp corners, we can pre-split edges surrounding a given corner. Recall that the formula to update the position of an old vertex is given by `(1 - n * u) * original_position + u * original_neighbor_position_sum`, where `u = 3 / (8 * n)` and `n` is the vertex’s degree. Logically, if we increase `n` by `1`, then `u` decreases by a factor of `8`. In the formula to update a vertex position, we see that the `1 - n * u` term increases and the `u` term decreases. In other words, the `original_position` will carry more weight, while the sum of neighboring positions will influence the original position less. As a result, the sharp corner vertex will move less towards the center of the cube. 
+
+For example, we loaded up `dae/cube.dae`, identified a corner vertex, then split all `n` edges exiting that vertex. We repeated this operation again for the same corner. Then, as we performed loop subdivision, we observed that the corner vertex moved much less at each iteration. Our experiment is depicted below: 
+
+| Without pre-splitting      | With pre-splitting |
+| ----------- | ----------- |
+| ![t11](/images/task5-before.png)   | ![t11](/images/task5-after-wflip.png)       |
