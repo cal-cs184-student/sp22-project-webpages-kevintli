@@ -43,3 +43,12 @@ To communicate the impact of BVH on rendering times, we perform A/B testing on a
 | maxplanch.dae   | (553.8451 seconds, 454831 rays traced, 24826.189824 intersection tests per ray)       | (1.1775 seconds, 475518 rays traced,  40.440957 intersection tests per ray)       | (470x speedup, 620x fewer intersection tests per ray) |
 
 From the above experiment where we compare statistics on geometries rendered without and with BVH acceleration, we see that BVH results in a >240x speedup in rendering time for `cow.dae` and a >470x speedup in rendering time for `maxplanch.dae`. We achieve these results by pruning nodes whose bounding box does not intersect with the traced ray. Thus, we performed 100x fewer primitive intersection tests per ray for `cow.dae` and 620x fewer primitive intersection tests per ray for `maxplanch.dae`. In lecture, we derived that primitive intersection tests are computationally expensive (even with our applied optimizations). Through BVH acceleration, we can make significantly fewer primitive intersection tests and therefore cut runtime by orders of magnitude.
+
+## Part 5: Adapative Sampling
+
+To perform adaptive sampling, we modify our `Pathtracer::raytrace_pixel(..)` implementation as follows: 
+1. We keep track of both a running sum and running squared sum, denoted by variable names `s1` and `s2`, respectively. 
+2. At every iteration, we compute the sample’s illuminance by calling `radiance.illum()`, where `radiance` is our estimate from Task 3 and 4. Then, we update `s1` and `s2` and continue with our uniform sampling algorithm from Task 1.2. 
+3. After every `samplesPerBatch` samples, we compute the mean, variance, and measure of pixel convergence ([source](https://cs184.eecs.berkeley.edu/sp22/docs/proj3-1-part-5)). If our measure of pixel convergence is less than or equal to `maxTolerance * mean`, we can halt our sampling algorithm, update the sample buffer with our average, update the count buffer with the number of samples we performed, then return. 
+
+Depicted below is the bunny scene with 2048 samples per pixel. 
