@@ -4,6 +4,14 @@
 
 ## Overview
 
+In this project, we contribute a physically-based renderer using a path tracing algorithm. Concretely, our contributions take on 5 main parts.
+1. In part 1, we perform ray generation and primitive scene intersection. By the end of this part, we were able to generate camera rays, sample rays over a unit pixel, and compute intersections between rays and two primitives: the triangle and sphere. 
+2. In part 2, we constructed a bounding volume hierarchy for an input scene using the recursive algorithms outlined in lecture. By the end of this part, we were able to generate a bounding volume hierarchy for a given set of primitives and intersect a ray with the BVH efficiently (i.e., in log time rather than linear time). In this part, it was crucial to keep track of pointers and valid intersection intervals between a ray and bounding box for part 2.2. 
+3. In part 3, we implemented direct illumination for both zero-bounce rays and one-bounce rays. To implement one-bounce rays, we constructed two sampling algorithms: Direct lighting with uniform hemisphere sampling and direct lighting with importance sampling. We needed to carefully compute normalization factors and ensure that we operated in the correct coordinate system (either world space or local object space). 
+4. In part 4, we implemented global illumination for at-least-one-bounce rays. We used an unbiased method for terminating rays called Russian Roulette. By the end of both parts 3 and 4, we were able to render photorealistic images with complex light scenes. 
+5. In part 5, we sped up our pixel-sampling algorithm from part 1 by terminating sampling algorithms that have likely converged already via adaptive sampling. By the end of this part, we could render more noise-free images more efficiently. One bug we faced was regarding floating point errors, where the measure of importance was always equating to zero. To solve this problem, we ensured that all integers were converted to floating point before computing `I`. 
+
+
 ## Part 1: Ray generation and scene intersection
 
 The overarching goals for part 1 were two-fold: 
@@ -58,3 +66,9 @@ Depicted below is the bunny scene with `2048` samples per pixel. Here, we use 1 
 | ----------- | ----------- |
 | ![t12](images/task5-bunny.png)      | ![t12](images/task5-bunny_rate.png)       |
 
+### Note on collaboration
+
+Kevin Li and Micah Yong collaborated on the path tracing project together. 
+- How we collaborated: For every part, one person was a lead (driver) and one person was a watcher (passenger). Leads were responsible for performing most of the initial research, coding implementation, and pull request. Passengers were responsible for assisting in pair-programming sessions, providing supplemental research and insights for the problem, and carefully reviewing the lead’s code.  
+- How it went: We found that this system works very well for completing most tasks, as ownership and responsibilities were clearly delineated from the onset. However, for highly complex tasks or debugging sessions, the “roles” faded away and we needed to be highly collaborative throughout the entire process. This was especially the case for tasks like Project 2.5 and Project 3.1.2. 
+- What we learned: With regards to collaboration, we learned how to communicate our thoughts clearly to one another and give constructive feedback during code reviews. This collaboration gives us a taste of what working with colleagues on challenging problems would be like in the real world. 
