@@ -51,4 +51,10 @@ To perform adaptive sampling, we modify our `Pathtracer::raytrace_pixel(..)` imp
 2. At every iteration, we compute the sample’s illuminance by calling `radiance.illum()`, where `radiance` is our estimate from Task 3 and 4. Then, we update `s1` and `s2` and continue with our uniform sampling algorithm from Task 1.2. 
 3. After every `samplesPerBatch` samples, we compute the mean, variance, and measure of pixel convergence ([source](https://cs184.eecs.berkeley.edu/sp22/docs/proj3-1-part-5)). If our measure of pixel convergence is less than or equal to `maxTolerance * mean`, we can halt our sampling algorithm, update the sample buffer with our average, update the count buffer with the number of samples we performed, then return. 
 
-Depicted below is the bunny scene with 2048 samples per pixel. 
+Depicted below is the bunny scene with `2048` samples per pixel. Here, we use 1 sample per light and 5 for max ray depth. Take special notice of the sample rate image (right), which shows how adaptive sampling changes depending on which part of the image we are rendering.
+
+
+| Noise-free Rendered Image      | Sample Rate Image |
+| ----------- | ----------- |
+| ![t12](images/task5-bunny.png)      | ![t12](images/task5-bunny_rate.png)       |
+
