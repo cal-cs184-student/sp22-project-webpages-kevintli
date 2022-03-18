@@ -52,6 +52,123 @@ To communicate the impact of BVH on rendering times, we perform A/B testing on a
 
 From the above experiment where we compare statistics on geometries rendered without and with BVH acceleration, we see that BVH results in a >240x speedup in rendering time for `cow.dae` and a >470x speedup in rendering time for `maxplanch.dae`. We achieve these results by pruning nodes whose bounding box does not intersect with the traced ray. Thus, we performed 100x fewer primitive intersection tests per ray for `cow.dae` and 620x fewer primitive intersection tests per ray for `maxplanch.dae`. In lecture, we derived that primitive intersection tests are computationally expensive (even with our applied optimizations). Through BVH acceleration, we can make significantly fewer primitive intersection tests and therefore cut runtime by orders of magnitude.
 
+## Part 3: Direct Illumination
+In part 3, we contributed two implementations for direct illumination: direct lighting with uniform hemisphere sampling and direct lighting by importance sampling of lights. Both implementations used Monte Carlo estimation to approximate the respective integrals, so each function contained a sampling loop. 
+
+### Direct lighting with uniform hemisphere sampling
+First, we ensure that there’s a running sum for our Monte Carlo estimator. In this case, the skeleton provides it for us––denoted with `L_out`. Then, for each iteration in our sampling loop, 
+1. We sampled the direction to draw from in the unit hemisphere (i.e., using `hemisphereSampler.get_sample()`). 
+2. Then, we compute the denominator of the [reflection equation estimate](https://cs184.eecs.berkeley.edu/sp22/lecture/13-23/global-illumination-and-path-tra) using `1 / 2 * pi`. This value represents our unbiased proposal distribution, `p(w_i)`, a uniform distribution over the unit hemisphere. 
+3. If the resulting sampled ray intersects with a light source, we’ll add its resulting contribution to the Monte Carlo running sum. The contribution is computed according to the reflection equation referenced above. 
+4. Finally, after `num_samples` iterations, we can return the average of `L_out` as our direct lighting estimate. 
+
+### Direct lighting with importance sampling
+The setup for this implementation is similar to the setup for `estimate_direct_lighting_hemisphere`. This time, however, we want to sample over incident light directions, `w_j`, rather than using uniform hemisphere sampling. Thus, the main difference in our implementation is just the way that we sample the incoming ray direction, and the resulting normalization factor in the Monte Carlo estimate.
+
+**Sampling procedure**<br>
+For each light in the scene:
+Take `ns_area_light` samples in the direction of the light:
+Sample an incoming ray direction in the range of directions for that light
+Cast a “shadow ray” from the hit point towards the light to see if there is anything blocking the light. Also, check if the sampled light is actually behind the surface, which happens if the cosine between the surface normal and the incoming direction is negative.
+If either of these is true, we ignore the contribution of this sample
+As an optimization, if the light being sampled is a point light, we can simply take a single sample and multiply the resulting contribution by `ns_area_light`.
+
+**Normalization factor**<br>
+Previously, we used a uniform distribution over the unit hemisphere for our estimate. Here, we instead use a distribution that focuses on directions of light sources (which are the only contributors to one-bounce radiance).
+
+We can think of our new distribution as a uniformly weighted mixture over the distributions for each light. If there are `N` light sources total, which have sampling distributions of `p_1`, `p_2`, …, `p_N` respectively, then the distribution we are using is:
+
+`1/N * p_1 + 1/N * p_2 + … + 1/N * p_N`
+
+Thus, for each sample `x` that we take involving light source `i`, the normalization factor for the Monte Carlo estimate should be `1/N * p_i(x)`.
+
+In our implementation, we don’t actually sample from this mixture distribution over lights, and instead deterministically take `ns_area_light` samples from each of the `N` light sources as suggested by the spec. However, this is the same in expectation as taking `N * ns_area_light` samples from the mixture distribution.
+
+**Example images**<br>
+| Uniform hemisphere sampling | Importance sampling of lights |
+| --------- | --------- |
+| ![](images/p3-bunny-H-low.png) | ![](images/p3-bunny-I-low.png)
+| ![](images/CBbunny_H_64_32.png) | ![](images/p3-bunny-I-high.png)
+| ![](images/p3-dragon-H.png) | ![](images/p3-dragon-I.png)
+
+**Analysis of uniform hemisphere sampling vs. lighting sampling**<br>
+
+As we see above, uniform hemisphere sampling generally results in “noisier” renders compared to importance sampling with the same number of light rays and samples per pixel. This makes sense because uniform sampling will sample many directions which do not intersect with a light source and thus contribute nothing to the overall estimate, whereas importance sampling of lights specifically focuses on directions which could affect the estimate.
+
+Also, when there are no area lights in the scene, uniform hemisphere sampling is not able to render anything, because it is very rare for a uniformly random sampled direction to point in the direction of a point light (like in the dragon image).
+
+**Effects of varying # of light rays**<br>
+Below, we render CBbunny.dae with 1 sample per pixel and a varying number of light rays sampled per area light. Increasing the number of light rays helps make the render significantly smoother.
+
+| 1 sample per area light | 4 samples per area light |
+| --------- | --------- |
+| ![](images/p3-bunny-l1.png) | ![](images/p3-bunny-l4.png)
+
+| 16 samples per area light | 64 samples per area light |
+| --------- | --------- |
+| ![](images/p3-bunny-l16.png) | ![](images/p3-bunny-l64.png)
+
+
+## Part 4: Global Illumination
+With global illumination, we need to take into account incoming radiance from non-light sources as well, which comes from two or more bounces (unlike Part 3, which only considered zero and one bounce radiance).
+
+To do this, we replaced the one bounce radiance component of `est_radiance_global_illumination` with `at_least_one_bounce_radiance`. This function does the following things:
+
+- Compute the one bounce radiance
+- Sample a new direction, then trace the ray from the original hit point in that direction to see where it intersects another surface (if any)
+- If it does hit a surface, then from that new intersection point, recurisvely compute `at_least_one_bounce_radiance` and add that to the overall estimate
+
+Although ideally global illumination would take into account infinitely many bounces of light, in order to make computation feasible, we do two things:
+- First, we do global illumination with a `max_ray_depth`. We do not consider lighting effects beyond this number of bounces.
+- Additionally, we use "Russian Roulette", which terminates the recursion early with some probability (we chose `0.35`) at each call. As we saw in lecture, this allows us to do our estimation with a finite number of steps, while still being unbiased.
+
+Below are some examples images rendered with global illumination. We used 1024 samples per pixel, 16 light rays, and a max depth of 5.
+
+![](images/p4-spheres-global.png)
+![](images/p4-dragon-global.png)
+
+We can also see the contributions of direct illumination and indirect illumination to the overall image:
+
+| Direct illumination only (0 and 1 bounce)      | Indirect illumination only (2+ bounces) |
+| ----------- | ----------- |
+| ![t12](images/p4-spheres-direct-only.png)      | ![t12](images/p4-spheres-indirect-only.png)       |
+
+### Effects of varying `max_ray_depth`
+Increasing the max ray depth helps improve our approximation of global illumination, making the rendered image brighter. However, we also see diminishing returns from depth — between depth 3 and depth 100, there is only a very tiny difference in lighting.
+
+| Depth 0     | Depth 1     |
+| ----------- | ----------- |
+| ![t12](images/p4-bunny-depth0.png)      | ![t12](images/p4-bunny-depth1.png)       |
+
+| Depth 2     | Depth 3     |
+| ----------- | ----------- |
+| ![t12](images/p4-bunny-depth2.png)      | ![t12](images/p4-bunny-depth3.png)       |
+
+| Depth 100    ||
+| ----------- | ----------- |
+| ![t12](images/p4-bunny-depth100.png)
+
+
+### Effects of varying samples per pixel
+Increasing the sample-per-pixel rate helps reduce the graininess of the rendered image:
+
+| 1 sample per pixel     | 2 samples per pixel     |
+| ----------- | ----------- |
+| ![t12](images/p4-spheres-samples1.png)      | ![t12](images/p4-spheres-samples2.png)       |
+
+| 4 samples per pixel     | 8 samples per pixel     |
+| ----------- | ----------- |
+| ![t12](images/p4-spheres-samples4.png)      | ![t12](images/p4-spheres-samples8.png)       |
+
+| 16 samples per pixel     | 64 samples per pixel     |
+| ----------- | ----------- |
+| ![t12](images/p4-spheres-samples16.png)      | ![t12](images/p4-spheres-samples64.png)       |
+
+| 1024 samples per pixel     | |
+| ----------- | ----------- |
+| ![t12](images/p4-spheres-samples1024.png)      |       |
+
+
 ## Part 5: Adapative Sampling
 
 To perform adaptive sampling, we modify our `Pathtracer::raytrace_pixel(..)` implementation as follows: 
