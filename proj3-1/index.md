@@ -84,6 +84,7 @@ Thus, for each sample `x` that we take involving light source `i`, the normaliza
 In our implementation, we don’t actually sample from this mixture distribution over lights, and instead deterministically take `ns_area_light` samples from each of the `N` light sources as suggested by the spec. However, this is the same in expectation as taking `N * ns_area_light` samples from the mixture distribution.
 
 **Example images**<br>
+
 | Uniform hemisphere sampling | Importance sampling of lights |
 | --------- | --------- |
 | ![](images/p3-bunny-H-low.png) | ![](images/p3-bunny-I-low.png) |
