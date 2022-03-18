@@ -85,11 +85,11 @@ In our implementation, we don’t actually sample from this mixture distribution
 
 **Example images**<br>
 
-| Uniform hemisphere sampling | Importance sampling of lights |
+| Uniform hemisphere sampling (16 samples per pixel, 8 light rays) | Importance sampling of lights (16 samples per pixel, 8 light rays) |
 | --------- | --------- |
 | ![](images/p3-bunny-H-low.png) | ![](images/p3-bunny-I-low.png) |
 
-| Uniform hemisphere sampling | Importance sampling of lights |
+| Uniform hemisphere sampling (64 samples per pixel, 32 light rays) | Importance sampling of lights (64 samples per pixel, 32 light rays) |
 | --------- | --------- |
 | ![](images/CBbunny_H_64_32.png) | ![](images/p3-bunny-I-high.png) |
 
