@@ -38,17 +38,16 @@ To construct a bounding volume hierarchy (BVH) for a set of primitives, we imple
 
 Reported below are images rendered from a few large .dae files. Without BVH acceleration, each of the files below would’ve taken too long to render (shortest render time without BVH is 47 seconds).
 
-![t12](images/task2-1.png)
-![t12](images/task2-2.png)
-![t12](images/task2-3.png)
-![t12](images/task2-4.png)
+![t12](images/p2-lucy.png)
+![t12](images/p2-cow.png)
+![t12](images/p2-maxplanck.png)
 
 To communicate the impact of BVH on rendering times, we perform A/B testing on a few moderately complex geometry scenes and compare rendering stats. 
 
 | Geometry file      | Without BVH | With BVH | Difference |
 | ----------- | ----------- | ----------- |----------- |
 | cow.dae      | (47.6920 seconds, 469993 rays traced, 2386.484205 intersection tests per ray)      | (0.6089 seconds, 471133 rays traced, 23.980791 intersection tests per ray)      | (240x speedup, 100x fewer intersection tests per ray)      |
-| maxplanch.dae   | (553.8451 seconds, 454831 rays traced, 24826.189824 intersection tests per ray)       | (1.1775 seconds, 475518 rays traced,  40.440957 intersection tests per ray)       | (470x speedup, 620x fewer intersection tests per ray) |
+| maxplanck.dae   | (553.8451 seconds, 454831 rays traced, 24826.189824 intersection tests per ray)       | (1.1775 seconds, 475518 rays traced,  40.440957 intersection tests per ray)       | (470x speedup, 620x fewer intersection tests per ray) |
 
 From the above experiment where we compare statistics on geometries rendered without and with BVH acceleration, we see that BVH results in a >240x speedup in rendering time for `cow.dae` and a >470x speedup in rendering time for `maxplanch.dae`. We achieve these results by pruning nodes whose bounding box does not intersect with the traced ray. Thus, we performed 100x fewer primitive intersection tests per ray for `cow.dae` and 620x fewer primitive intersection tests per ray for `maxplanch.dae`. In lecture, we derived that primitive intersection tests are computationally expensive (even with our applied optimizations). Through BVH acceleration, we can make significantly fewer primitive intersection tests and therefore cut runtime by orders of magnitude.
 
@@ -132,6 +131,7 @@ Below are some examples images rendered with global illumination. We used 1024 s
 
 ![](images/p4-spheres-global.png)
 ![](images/p4-dragon-global.png)
+![](images/p4-bench-global.png)
 
 We can also see the contributions of direct illumination and indirect illumination to the overall image:
 
