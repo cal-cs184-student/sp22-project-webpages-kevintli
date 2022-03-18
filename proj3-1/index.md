@@ -88,14 +88,15 @@ In our implementation, we don’t actually sample from this mixture distribution
 | Uniform hemisphere sampling | Importance sampling of lights |
 | --------- | --------- |
 | ![](images/p3-bunny-H-low.png) | ![](images/p3-bunny-I-low.png) |
+
+| Uniform hemisphere sampling | Importance sampling of lights |
+| --------- | --------- |
 | ![](images/CBbunny_H_64_32.png) | ![](images/p3-bunny-I-high.png) |
-| ![](images/p3-dragon-H.png) | ![](images/p3-dragon-I.png) |
 
 **Analysis of uniform hemisphere sampling vs. lighting sampling**<br>
 
 As we see above, uniform hemisphere sampling generally results in “noisier” renders compared to importance sampling with the same number of light rays and samples per pixel. This makes sense because uniform sampling will sample many directions which do not intersect with a light source and thus contribute nothing to the overall estimate, whereas importance sampling of lights specifically focuses on directions which could affect the estimate.
 
-Also, when there are no area lights in the scene, uniform hemisphere sampling is not able to render anything, because it is very rare for a uniformly random sampled direction to point in the direction of a point light (like in the dragon image).
 
 **Effects of varying # of light rays**<br>
 Below, we render CBbunny.dae with 1 sample per pixel and a varying number of light rays sampled per area light. Increasing the number of light rays helps make the render significantly smoother.
