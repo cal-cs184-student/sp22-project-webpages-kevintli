@@ -87,9 +87,9 @@ In our implementation, we don’t actually sample from this mixture distribution
 **Example images**<br>
 | Uniform hemisphere sampling | Importance sampling of lights |
 | --------- | --------- |
-| ![](images/p3-bunny-H-low.png) | ![](images/p3-bunny-I-low.png)
-| ![](images/CBbunny_H_64_32.png) | ![](images/p3-bunny-I-high.png)
-| ![](images/p3-dragon-H.png) | ![](images/p3-dragon-I.png)
+| ![](images/p3-bunny-H-low.png) | ![](images/p3-bunny-I-low.png) |
+| ![](images/CBbunny_H_64_32.png) | ![](images/p3-bunny-I-high.png) |
+| ![](images/p3-dragon-H.png) | ![](images/p3-dragon-I.png) |
 
 **Analysis of uniform hemisphere sampling vs. lighting sampling**<br>
 
@@ -102,11 +102,11 @@ Below, we render CBbunny.dae with 1 sample per pixel and a varying number of lig
 
 | 1 sample per area light | 4 samples per area light |
 | --------- | --------- |
-| ![](images/p3-bunny-l1.png) | ![](images/p3-bunny-l4.png)
+| ![](images/p3-bunny-l1.png) | ![](images/p3-bunny-l4.png) |
 
 | 16 samples per area light | 64 samples per area light |
 | --------- | --------- |
-| ![](images/p3-bunny-l16.png) | ![](images/p3-bunny-l64.png)
+| ![](images/p3-bunny-l16.png) | ![](images/p3-bunny-l64.png) |
 
 
 ## Part 4: Global Illumination
@@ -146,7 +146,7 @@ Increasing the max ray depth helps improve our approximation of global illuminat
 
 | Depth 100    ||
 | ----------- | ----------- |
-| ![t12](images/p4-bunny-depth100.png)
+| ![t12](images/p4-bunny-depth100.png) | |
 
 
 ### Effects of varying samples per pixel
