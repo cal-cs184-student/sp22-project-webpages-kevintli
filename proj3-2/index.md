@@ -10,7 +10,9 @@ In this project, we extend our results from our ray tracer from project 3-1 by m
 
 The most important part of this project was understanding and correctly implementing the complicated procedures/equations described in lecture. We approached the project by first carefully reading the spec, focusing on the required implementation items and mistakes to watch out for, then writing the code while frequently referring back to the spec and lecture slides. We encountered several tricky bugs, particularly with Part 2. To fix these, we found it helpful to pair program in order to sanity check our assumptions, and also take breaks and come back to the code with a fresh pair of eyes.
 
-## Part 1: Mirror BRDF
+<br>
+
+## Part 1: Mirror and Glass Materials
 
 ### Summary 
 
@@ -20,9 +22,43 @@ In this problem, we added support for mirror and glass materials by implementing
 - **Refraction**: Given an incoming light ray, we compute the direction of refraction as described in Lecture 14: Material Modeling, as well as the BSDF value based on the index of refractions of the two materials.
 - **Glass**: This is a combination of reflection and refraction. Instead of trying to model the exact Fresnel equations, we apply Schlick’s approximation, which computes a reflection coefficient R according to the index of refraction and then decides whether to reflect or refract each ray with a coin flip (with reflection probability R).
 
-### Results
+<br>
 
-## Part 2: Microfacet BRDF
+### Results
+Below is a comparison of CBSpheres.dae rendered with varying max ray depths. These were rendered with 256 samples per pixel and 16 samples per light. 
+
+<br>
+
+| Max ray depth      | Result |
+| ----------- | ----------- |
+| `0`      | ![p5](images/spheres_glass_detailed_m0.png)       |
+| `1`   | ![p5](images/spheres_glass_detailed_m1.png)        |
+| `2`   | ![p5](images/spheres_glass_detailed_m2.png)        |
+| `3`   | ![p5](images/spheres_glass_detailed_m3.png)        |
+| `4`   | ![p5](images/spheres_glass_detailed_m4.png)        |
+| `5`   | ![p5](images/spheres_glass_detailed_m5.png)        |
+| `100`   | ![p5](images/spheres_glass_detailed_m100.png)        |
+
+<br>
+
+Below is the same table, but with explanations of how the increasing number of bounces creates certain lighting effects:
+
+<br>
+
+| Max ray depth      | Result | Explanation |
+| ----------- | ----------- | ---------- |
+| `0`      | ![p5](images/spheres_glass_detailed_m0.png)       | With zero bounces, we only see the direct light source and not any other objects. |
+| `1`   | ![p5](images/spheres_glass_detailed_m1.png)        | With one bounce, we see reflections of direct lighting sources on the spheres, since we can have rays that go from the light source to the sphere (1 bounce) and then to the camera. |
+| `2`   | ![p5](images/spheres_glass_detailed_m2.png)        | With two bounces, we also see reflections of the rest of the scene on the spheres. This is because we can have rays that go from light sources to other objects (1 bounce), then to the sphere (2 bounces), and finally to the camera. |
+| `3`   | ![p5](images/spheres_glass_detailed_m3.png)        | With three bounces, we additionally see the effects of refraction in the spheres, since this requires one more bounce compared to reflection: one bounce for a ray to enter the object, and one bounce to exit. For example, we see refraction on the surface of the right sphere as well as the shadow underneath it. |
+| `4`   | ![p5](images/spheres_glass_detailed_m4.png)        | With four bounces, we see the same reflection/refraction effects as with three, and additionally see the reflections of refracted light due to the extra bounce. This is visible on the bottom surface of the right sphere, and on the blue wall where there’s a small speck of light. |
+| `5`   | ![p5](images/spheres_glass_detailed_m5.png)        | With five bounces, our scene becomes slightly brighter thanks to the additional bounce resulting in more potential sources of light. |
+| `100`   | ![p5](images/spheres_glass_detailed_m100.png)        | With 100 bounces, our scene is even brighter because the additional bounces make the global illumination approximation closer to reality.
+ |
+
+ <br>
+
+## Part 2: Microfacet Material
 
 ### Summary
 
@@ -42,22 +78,22 @@ First, we will present a sequence of four renders of `CBdragon_microfacet_au.dae
 
 | Alpha      | Resulting Dragon |
 | ----------- | ----------- |
-| `0.5`      | ![p5](microfacet_dragon_0p5.png)       |
-| `0.25`   | ![p5](microfacet_dragon_0p25.png)        |
-| `0.05`   | ![p5](microfacet_dragon_0p05.png)        |
-| `0.005`   | ![p5](microfacet_dragon_0p005.png)        |
+| `0.5`      | ![p5](images/microfacet_dragon_0p5.png)       |
+| `0.25`   | ![p5](images/microfacet_dragon_0p25.png)        |
+| `0.05`   | ![p5](images/microfacet_dragon_0p05.png)        |
+| `0.005`   | ![p5](images/microfacet_dragon_0p005.png)        |
 
 Second, we will present a side by side comparison of `CBbunny_microfacet_cu.dae`. The left image uses the default cosine hemisphere sampling while the right image uses our contributed importance sampling. In the left image, you will notice several rendering artifacts on and around the bunny. The reason for this observation is that it takes much longer for cosine hemisphere sampling to converge compared to importance sampling (e.g. 64 samples per pixel was likely not enough). The right image uses importance sampling that follows the Beckmann distribution––the same distribution we used for our NDF term. Thus, we achieve an accurately-depicted bunny with only 64 samples per pixel. We rendered the following images using 64 samples per pixel, 8 threads, 5 light bounces, and 1 sample per light. 
 
 | With cosine hemisphere sampling      | With importance sampling following the Beckmann distribution |
 | ----------- | ----------- |
-| ![p5](microfacet_bunny_HS.png)      | ![p5](microfacet_bunny_IS.png)       |
+| ![p5](images/microfacet_bunny_HS.png)      | ![p5](images/microfacet_bunny_IS.png) |
 
 Finally, we will present a new version of `CBbunny_microfacet_cu.dae` using a nickel-iron alloy derived [here](https://refractiveindex.info/?shelf=other&book=Ni-Fe&page=Tikuisis_gold150nm). Our newly derived values for `eta` and `k` give the bunny a sandpaper-like silver look (we used `alpha = 0.05`). The resulting  material is reminiscent of a roughed up permalloy. We rendered the following images using 64 samples per pixel, 8 threads, 5 light bounces, and 1 sample per light (same as above). Both images below use importance sampling. 
 
 | Copper      | Nickel-Iron |
 | ----------- | ----------- |
-| ![p5](microfacet_bunny_IS.png)      | ![p5](microfacet_bunny_nife.png)       |
+| ![p5](images/microfacet_bunny_IS.png)      | ![p5](images/microfacet_bunny_nife.png)       |
 
 
 ## Note on Collaboration
