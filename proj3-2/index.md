@@ -8,9 +8,17 @@ In this project, we extend our results from our ray tracer from project 3-1 by m
 1. First, we develop support for glass materials and mirror-like surfaces. We made such contributions in the MirrorBSDF class. This task covered topics and techniques such as reflection, refraction, and Schlick’s approximation. 
 2. Second, we develop support for microfacet metal-like materials like gold, copper, and nickel. We made such contributions in the MicrofacetBSDF class. This task covered topics and techniques such as Fresnel terms, normal distribution functions, and importance sampling according to the Beckmann distribution. 
 
+The most important part of this project was understanding and correctly implementing the complicated procedures/equations described in lecture. We approached the project by first carefully reading the spec, focusing on the required implementation items and mistakes to watch out for, then writing the code while frequently referring back to the spec and lecture slides. We encountered several tricky bugs, particularly with Part 2. To fix these, we found it helpful to pair program in order to sanity check our assumptions, and also take breaks and come back to the code with a fresh pair of eyes.
+
 ## Part 1: Mirror BRDF
 
 ### Summary 
+
+In this problem, we added support for mirror and glass materials by implementing reflection and refraction. To do this, we added three new BSDF and sampling functions:
+
+- **Mirror**: Given an incoming light ray, simply reflect it in the opposite direction (x, y change signs but z stays the same).
+- **Refraction**: Given an incoming light ray, we compute the direction of refraction as described in Lecture 14: Material Modeling, as well as the BSDF value based on the index of refractions of the two materials.
+- **Glass**: This is a combination of reflection and refraction. Instead of trying to model the exact Fresnel equations, we apply Schlick’s approximation, which computes a reflection coefficient R according to the index of refraction and then decides whether to reflect or refract each ray with a coin flip (with reflection probability R).
 
 ### Results
 
