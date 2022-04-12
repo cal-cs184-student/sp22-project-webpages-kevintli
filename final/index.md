@@ -52,23 +52,23 @@ If the baseline project goes well and we implement steps 1 through 4 ahead of sc
 
 ## Schedule 
 
-Week 1 (4/13 - 4/19)
-Set up AliceVision and verify that we can get 3D reconstruction working on a few example objects
+**Week 1** (4/13 - 4/19)
+- Set up AliceVision and verify that we can get 3D reconstruction working on a few example objects
 
-Week 2 (4/20 - 4/26)
-Implement our basic keyframe animation algorithm
-Integrate raytracing/material effects code from Project 3
-Use example meshes outputted by AliceVision to test keyframe animation and various materials and lighting effects
+**Week 2** (4/20 - 4/26)
+- Implement our basic keyframe animation algorithm
+- Integrate raytracing/material effects code from Project 3
+- Use example meshes outputted by AliceVision to test keyframe animation and various materials and lighting effects
 
-Week 3 (4/27 - 5/2)
-Turn our existing pipeline into a web or mobile app with a basic UI for uploading images and customizing animations
-Optimize code if needed
+**Week 3** (4/27 - 5/2)
+- Turn our existing pipeline into a web or mobile app with a basic UI for uploading images and customizing animations
+- Optimize code if needed
 
-Week 4 (5/3 - 5/10)
-Finalize web/mobile app
-Final presentation on Thurs, 5/5
-Peer review due Mon, 5/10
-Final ACM paper due on Tues, 5/11
+**Week 4** (5/3 - 5/10)
+- Finalize web/mobile app
+- Final presentation on Thurs, 5/5
+- Peer review due Mon, 5/10
+- Final ACM paper due on Tues, 5/11
 
 
 ## Resources
