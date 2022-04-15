@@ -12,7 +12,7 @@ To communicate our results for part 1, we portray the following screenshots of `
 
 | Experiment description      | Result |
 | ----------- | ----------- |
-| Without any shearing constraints      | ![p5](images/task-1-no-shear.png)       |
+| Without any shearing constraints (you might have to zoom in)      | ![p5](images/task-1-no-shear.png)       |
 | With only shearing constraints      | ![p5](images/task-1-shear.png)       |
 | Without all constraints applied     | ![p5](images/task-1-all.png)       |
 
@@ -69,8 +69,5 @@ The following table portrays our results from a cloth falling onto a plane. We c
 | ----------- | ----------- |
 | ![p5](images/task3-custom-plane.png)      | ![p5](images/task3-default-plane.png)       |
 
-<table with two rows and two columns>
-Resting position: Custom wireframe
-Resting position: Default coloring
 
 ## Task 4: 
