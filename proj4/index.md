@@ -2,6 +2,8 @@
 
 **Contributors**: Micah Yong (micahtyong@berkeley.edu) and Kevin Li (kevintli@berkeley.edu)
 
+**Webpage**: https://cal-cs184-student.github.io/sp22-project-webpages-kevintli/proj4/index.html
+
 ## Overview
 
 In this project, we implemented a real-time cloth simulation using a mass and spring-based system. We implemented the exact physical constraints on each point mass and spring, then applied numerical integration to simulate the way the cloth moves over time. We implemented collisions with other objects as well as handling for self-collisions. We learned advanced techniques such as the 10% rule to define deformation constraints and Verlet integration to estimate cloth movement efficiently. 
@@ -77,11 +79,11 @@ The following table portrays our results from a cloth falling onto a plane. We c
 ## Part 4: Self-Collisions
 
 ### Basic self-collision example with cloth
-![p5](images/p4-anim-1.png)
-![p5](images/p4-anim-2.png)
-![p5](images/p4-anim-3.png)
-![p5](images/p4-anim-4.png)
-![p5](images/p4-anim-5.png)
+
+| | | |
+| -- | -- | -- |
+| ![p5](images/p4-anim-1.png) | ![p5](images/p4-anim-2.png) | ![p5](images/p4-anim-3.png) |
+| ![p5](images/p4-anim-4.png) | ![p5](images/p4-anim-5.png) | |
 
 ### Results of varying density and `ks`
 With lower density, the cloth remains fairly smooth during the self-collision, and quickly flattens itself out after making contact with the ground. With higher density, the cloth crumples a lot more upon landing, and appears to be in a series of clumps even as it slowly flattens out.
@@ -138,6 +140,7 @@ Below is an example of texture mapping with a custom texture file:
 ### Bump and displacement mapping
 
 **Bump mapping**
+
 | Cloth and sphere (before falling) | Cloth and sphere (after falling) |
 | -- | -- |
 | ![p5](images/p5-bump-before.png) | ![p5](images/p5-bump-after.png)  |
