@@ -77,10 +77,11 @@ The following table portrays our results from a cloth falling onto a plane. We c
 ## Part 4: Self-Collisions
 
 ### Basic self-collision example with cloth
-| | | |
-| -- | -- | -- |
-| ![p5](images/p4-anim-1.png) | ![p5](images/p4-anim-2.png)  |  ![p5](images/p4-anim-3.png)  | 
-| ![p5](images/p4-anim-4.png) | ![p5](images/p4-anim-5.png)  |
+![p5](images/p4-anim-1.png)
+![p5](images/p4-anim-2.png)
+![p5](images/p4-anim-3.png)
+![p5](images/p4-anim-4.png)
+![p5](images/p4-anim-5.png)
 
 ### Results of varying density and `ks`
 With lower density, the cloth remains fairly smooth during the self-collision, and quickly flattens itself out after making contact with the ground. With higher density, the cloth crumples a lot more upon landing, and appears to be in a series of clumps even as it slowly flattens out.
