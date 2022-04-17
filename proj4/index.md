@@ -146,6 +146,7 @@ Below is an example of texture mapping with a custom texture file:
 | ![p5](images/p5-bump-before.png) | ![p5](images/p5-bump-after.png)  |
 
 **Displacement mapping**
+
 | Cloth and sphere (before falling) | Cloth and sphere (after falling) |
 | -- | -- |
 | ![p5](images/p5-disp-before.png) | ![p5](images/p5-disp-after.png)  |
